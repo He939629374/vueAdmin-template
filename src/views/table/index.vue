@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-table :data="list"  element-loading-text="Loading" border fit highlight-current-row>
+    <el-table :data="list" v-loading.body="listLoading" element-loading-text="Loading" border fit highlight-current-row>
       <el-table-column align="center" label='ID' width="95">
         <template slot-scope="scope">
           {{scope.$index}}
@@ -85,7 +85,7 @@
 
 <script>
 import { getList } from '@/api/table'
-
+import axios from 'axios'
 export default {
   data() {
     return {
@@ -104,7 +104,7 @@ export default {
       statusOptions: ['published', 'draft', 'deleted'],
       dialogTableVisible:false,
       dialogStatus:'',
-      list: null,
+      list:null,
       listLoading: true
     }
   },
@@ -166,12 +166,35 @@ export default {
       })
     },
     fetchData() {
-      getList().then(response => {
-        
-        alert("1")
-        this.list = response.data.item
-        this.listLoading = false
+      this.listLoading = true;
+      var self =this;
+      //   getList(this.listQuery).then(response => {
+      //   this.list = response.data.items
+      //   this.listLoading = false
+      //   console.log(response.data);
+      // })
+    axios.get('https://easy-mock.com/mock/5a77d8ca2b34a719baf5768f/example/list')
+      .then(function (response) { 
+        console.log(response.data.items);
+        self.list = response.data.items
+        self.listLoading = false
+        //self.listLoading = false
+        //var re=Array.author(response.data.item)
+        //console.log(re)
+        //var re=JSON.stringify(response.data.item);
+        //var re= Object.getOwnPropertyNames(response.data.item); //拿属性名
+        // var arr2 = []
+        // var arr3 = []
+        // for (var i in response.data.items) {
+        //     arr2.push(i); //属性    
+        //     arr3.push(response.data.items[i])          
+        // }
+        // console.log(arr2);
+        // console.log(arr3);
       })
+      .catch(function (error) {
+        console.log(error);
+      });
     }
   }
 }
